@@ -22,7 +22,7 @@ A customizable Pomodoro Timer application built with Electron, React, and TypeSc
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/pomodoro-timer.git
+   git clone https://github.com/andrespaulino/pomodoro-timer.git
    cd pomodoro-timer
    ```
 
