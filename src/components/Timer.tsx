@@ -2,16 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 
 interface TimerProps {
+  pomodoroTime: number;
+  breakTime: number;
   onComplete: (duration: number) => void;
 }
 
 type TimerState = 'pomodoro' | 'break' | 'idle';
 
-const POMODORO_TIME = 3; // 25 minutes
-const BREAK_TIME = 3; // 5 minutes
-
-const Timer: React.FC<TimerProps> = ({ onComplete }) => {
-  const [time, setTime] = useState<number>(POMODORO_TIME);
+const Timer: React.FC<TimerProps> = ({ pomodoroTime, breakTime, onComplete }) => {
+  const [time, setTime] = useState<number>(pomodoroTime);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [timerState, setTimerState] = useState<TimerState>('idle');
@@ -23,16 +22,16 @@ const Timer: React.FC<TimerProps> = ({ onComplete }) => {
   }, []);
 
   const startPomodoro = useCallback(() => {
-    resetTimer(POMODORO_TIME);
+    resetTimer(pomodoroTime);
     setTimerState('pomodoro');
     setIsActive(true);
-  }, [resetTimer]);
+  }, [pomodoroTime, resetTimer]);
 
   const startBreak = useCallback(() => {
-    resetTimer(BREAK_TIME);
+    resetTimer(breakTime);
     setTimerState('break');
     setIsActive(true);
-  }, [resetTimer]);
+  }, [breakTime, resetTimer]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -83,7 +82,7 @@ const Timer: React.FC<TimerProps> = ({ onComplete }) => {
             Pause
           </button>
         )}
-        {timerState === 'pomodoro' && !isActive && time !== POMODORO_TIME && (
+        {timerState === 'pomodoro' && !isActive && time !== pomodoroTime && (
           <button className='px-4 py-2 rounded-md text-white font-semibold bg-green-500 hover:bg-green-600' onClick={toggleTimer}>
             Resume
           </button>
