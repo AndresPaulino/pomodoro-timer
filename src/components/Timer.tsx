@@ -3,28 +3,31 @@ import { toast } from 'react-toastify';
 
 interface TimerProps {
   initialTime: number;
-  onComplete?: () => void;
+  onComplete: (duration: number) => void;
 }
 
 const Timer: React.FC<TimerProps> = ({ initialTime, onComplete }) => {
   const [time, setTime] = useState<number>(initialTime);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isActive && time > 0) {
       interval = setInterval(() => {
         setTime((prevTime) => prevTime - 1);
+        setElapsedTime((prevElapsed) => prevElapsed + 1);
       }, 1000);
     } else if (time === 0) {
       if (interval) clearInterval(interval);
       toast.success('Pomodoro session completed!');
-      if (onComplete) onComplete();
+      onComplete(elapsedTime);
+      setElapsedTime(0);
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, time, onComplete]);
+  }, [isActive, time, onComplete, elapsedTime]);
 
   const toggleTimer = (): void => {
     setIsActive(!isActive);
