@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# Pomodoro Timer Desktop Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A customizable Pomodoro Timer application built with Electron, React, and TypeScript. This app helps you manage your time effectively using the Pomodoro Technique, complete with productivity analytics and streak tracking.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- 🍅 Customizable Pomodoro and break durations
+- 📊 Productivity analytics with daily, weekly, and monthly views
+- 🔥 Streak tracking to motivate consistent usage
+- 📝 Task input and categorization
+- 💾 Offline functionality with local data storage
+- 🖥️ Cross-platform desktop application (Windows, macOS, Linux)
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later)
 
-### `npm test`
+### Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/pomodoro-timer.git
+   cd pomodoro-timer
+   ```
 
-### `npm run build`
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Start the development server:
+   ```
+   npm run electron:dev
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Building the Application
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To build the application for your current platform:
 
-### `npm run eject`
+```
+npm run electron:build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The built application will be available in the `dist` folder.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Start the application
+2. Set your desired Pomodoro and break durations in the Settings
+3. Enter a task and select a category
+4. Start the Pomodoro timer
+5. Work until the timer ends, then take a break
+6. Repeat and watch your productivity grow!
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Technologies Used
 
-## Learn More
+- Electron
+- React
+- TypeScript
+- TailwindCSS
+- Recharts (for analytics visualization)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Contributing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-### Code Splitting
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
