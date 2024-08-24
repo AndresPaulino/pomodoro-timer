@@ -5,7 +5,7 @@
     "sourceMap": true,
     "strict": true,
     "outDir": "./build/electron",
-    "rootDir": "./src/electron",
+    "rootDir": "./electron",
     "noEmitOnError": true,
     "typeRoots": ["node_modules/@types"]
   },
