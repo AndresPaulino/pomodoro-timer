@@ -1,15 +1,14 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
-import isDev from 'electron-is-dev';
+import * as isDev from 'electron-is-dev';
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
