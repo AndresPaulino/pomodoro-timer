@@ -8,7 +8,7 @@ import useProductivityData from './hooks/useProductivityData';
 
 const App: React.FC = () => {
   const [currentTask, setCurrentTask] = useState<{ task: string; category: string } | null>(null);
-  const { sessions, addSession } = useProductivityData();
+  const { sessions, addSession, currentStreak } = useProductivityData();
 
   const handleTaskStart = (task: string, category: string) => {
     setCurrentTask({ task, category });
@@ -21,7 +21,6 @@ const App: React.FC = () => {
         category: currentTask.category,
         duration,
       });
-      setCurrentTask(null);
     }
   };
 
@@ -36,9 +35,9 @@ const App: React.FC = () => {
             <p className='text-gray-600'>Category: {currentTask.category}</p>
           </div>
         )}
-        <Timer initialTime={5} onComplete={(duration) => handleTimerComplete(duration)} />
-        <Analytics sessions={sessions} />
-        <ToastContainer />
+        <Timer onComplete={handleTimerComplete} />
+        <Analytics sessions={sessions} currentStreak={currentStreak} />
+        <ToastContainer limit={1} />
       </div>
     </div>
   );

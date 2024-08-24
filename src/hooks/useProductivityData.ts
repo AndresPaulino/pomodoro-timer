@@ -11,33 +11,47 @@ export interface ProductivitySession {
 export interface ProductivityData {
   sessions: ProductivitySession[];
   totalTime: number;
+  currentStreak: number;
   addSession: (session: Omit<ProductivitySession, 'id' | 'date'>) => void;
   removeSession: (id: string) => void;
 }
 
 const useProductivityData = (): ProductivityData => {
   const [sessions, setSessions] = useState<ProductivitySession[]>([]);
+  const [currentStreak, setCurrentStreak] = useState<number>(0);
 
   useEffect(() => {
     const storedSessions = localStorage.getItem('productivitySessions');
+    const storedStreak = localStorage.getItem('currentStreak');
     if (storedSessions) {
       setSessions(JSON.parse(storedSessions, (key, value) => (key === 'date' ? new Date(value) : value)));
+    }
+    if (storedStreak) {
+      setCurrentStreak(parseInt(storedStreak, 10));
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('productivitySessions', JSON.stringify(sessions));
-  }, [sessions]);
+    localStorage.setItem('currentStreak', currentStreak.toString());
+  }, [sessions, currentStreak]);
 
   const addSession = (session: Omit<ProductivitySession, 'id' | 'date'>): void => {
-    setSessions((prevSessions) => [
-      ...prevSessions,
-      {
-        ...session,
-        id: Date.now().toString(),
-        date: new Date(),
-      },
-    ]);
+    const newSession = {
+      ...session,
+      id: Date.now().toString(),
+      date: new Date(),
+    };
+    setSessions((prevSessions) => [...prevSessions, newSession]);
+
+    // Update streak
+    const lastSession = sessions[sessions.length - 1];
+    const oneDayInMs = 24 * 60 * 60 * 1000;
+    if (lastSession && new Date(newSession.date).getTime() - new Date(lastSession.date).getTime() <= oneDayInMs) {
+      setCurrentStreak((prevStreak) => prevStreak + 1);
+    } else {
+      setCurrentStreak(1);
+    }
   };
 
   const removeSession = (id: string): void => {
@@ -46,7 +60,7 @@ const useProductivityData = (): ProductivityData => {
 
   const totalTime = sessions.reduce((sum, session) => sum + session.duration, 0);
 
-  return { sessions, totalTime, addSession, removeSession };
+  return { sessions, totalTime, currentStreak, addSession, removeSession };
 };
 
 export default useProductivityData;

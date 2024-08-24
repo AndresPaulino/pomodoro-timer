@@ -4,9 +4,10 @@ import { ProductivitySession } from '../hooks/useProductivityData';
 
 interface AnalyticsProps {
   sessions: ProductivitySession[];
+  currentStreak: number;
 }
 
-const Analytics: React.FC<AnalyticsProps> = ({ sessions }) => {
+const Analytics: React.FC<AnalyticsProps> = ({ sessions, currentStreak }) => {
   const categorySummary = sessions.reduce((acc, session) => {
     acc[session.category] = (acc[session.category] || 0) + session.duration;
     return acc;
@@ -20,6 +21,11 @@ const Analytics: React.FC<AnalyticsProps> = ({ sessions }) => {
   return (
     <div className='mt-8'>
       <h2 className='text-2xl font-bold mb-4'>Productivity Analytics</h2>
+      <div className='mb-4 p-4 bg-blue-100 rounded-lg'>
+        <p className='text-xl font-semibold'>
+          Current Streak: {currentStreak} {currentStreak === 1 ? 'day' : 'days'}
+        </p>
+      </div>
       <ResponsiveContainer width='100%' height={300}>
         <BarChart data={chartData}>
           <XAxis dataKey='category' />

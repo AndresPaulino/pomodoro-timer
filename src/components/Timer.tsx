@@ -1,15 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 
 interface TimerProps {
-  initialTime: number;
   onComplete: (duration: number) => void;
 }
 
-const Timer: React.FC<TimerProps> = ({ initialTime, onComplete }) => {
-  const [time, setTime] = useState<number>(initialTime);
+type TimerState = 'pomodoro' | 'break' | 'idle';
+
+const POMODORO_TIME = 3; // 25 minutes
+const BREAK_TIME = 3; // 5 minutes
+
+const Timer: React.FC<TimerProps> = ({ onComplete }) => {
+  const [time, setTime] = useState<number>(POMODORO_TIME);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [timerState, setTimerState] = useState<TimerState>('idle');
+
+  const resetTimer = useCallback((duration: number) => {
+    setTime(duration);
+    setElapsedTime(0);
+    setIsActive(false);
+  }, []);
+
+  const startPomodoro = useCallback(() => {
+    resetTimer(POMODORO_TIME);
+    setTimerState('pomodoro');
+    setIsActive(true);
+  }, [resetTimer]);
+
+  const startBreak = useCallback(() => {
+    resetTimer(BREAK_TIME);
+    setTimerState('break');
+    setIsActive(true);
+  }, [resetTimer]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -18,24 +41,24 @@ const Timer: React.FC<TimerProps> = ({ initialTime, onComplete }) => {
         setTime((prevTime) => prevTime - 1);
         setElapsedTime((prevElapsed) => prevElapsed + 1);
       }, 1000);
-    } else if (time === 0) {
+    } else if (time === 0 && isActive) {
       if (interval) clearInterval(interval);
-      toast.success('Pomodoro session completed!');
-      onComplete(elapsedTime);
-      setElapsedTime(0);
+      if (timerState === 'pomodoro') {
+        toast.success('Pomodoro completed! Time for a break.');
+        onComplete(elapsedTime);
+      } else if (timerState === 'break') {
+        toast.info('Break time over. Ready for another Pomodoro?');
+      }
+      setIsActive(false);
+      setTimerState('idle');
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, time, onComplete, elapsedTime]);
+  }, [isActive, time, onComplete, elapsedTime, timerState]);
 
   const toggleTimer = (): void => {
     setIsActive(!isActive);
-  };
-
-  const resetTimer = (): void => {
-    setTime(initialTime);
-    setIsActive(false);
   };
 
   const formatTime = (timeInSeconds: number): string => {
@@ -46,19 +69,38 @@ const Timer: React.FC<TimerProps> = ({ initialTime, onComplete }) => {
 
   return (
     <div className='text-center p-6 bg-gray-100 rounded-lg shadow-md'>
-      <h1 className='text-6xl font-bold mb-4 text-gray-800'>{formatTime(time)}</h1>
+      <h1 className={`text-6xl font-bold mb-4 ${timerState === 'break' ? 'text-green-500' : 'text-gray-800'}`}>
+        {formatTime(time)}
+      </h1>
       <div className='space-x-4'>
-        <button
-          className={`px-4 py-2 rounded-md text-white font-semibold ${
-            isActive ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
-          }`}
-          onClick={toggleTimer}
-        >
-          {isActive ? 'Pause' : 'Start'}
-        </button>
-        <button className='px-4 py-2 rounded-md text-white font-semibold bg-blue-500 hover:bg-blue-600' onClick={resetTimer}>
-          Reset
-        </button>
+        {timerState === 'idle' && (
+          <button className='px-4 py-2 rounded-md text-white font-semibold bg-blue-500 hover:bg-blue-600' onClick={startPomodoro}>
+            Start Pomodoro
+          </button>
+        )}
+        {timerState === 'pomodoro' && isActive && (
+          <button className='px-4 py-2 rounded-md text-white font-semibold bg-red-500 hover:bg-red-600' onClick={toggleTimer}>
+            Pause
+          </button>
+        )}
+        {timerState === 'pomodoro' && !isActive && time !== POMODORO_TIME && (
+          <button className='px-4 py-2 rounded-md text-white font-semibold bg-green-500 hover:bg-green-600' onClick={toggleTimer}>
+            Resume
+          </button>
+        )}
+        {timerState === 'idle' && time === 0 && (
+          <button className='px-4 py-2 rounded-md text-white font-semibold bg-green-500 hover:bg-green-600' onClick={startBreak}>
+            Start Break
+          </button>
+        )}
+        {timerState === 'break' && (
+          <button
+            className='px-4 py-2 rounded-md text-white font-semibold bg-yellow-500 hover:bg-yellow-600'
+            onClick={toggleTimer}
+          >
+            {isActive ? 'Pause Break' : 'Resume Break'}
+          </button>
+        )}
       </div>
     </div>
   );
